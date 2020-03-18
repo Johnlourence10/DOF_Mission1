@@ -13,7 +13,7 @@ namespace DOFprojFPS {
 
     public class ConsumeEvents : MonoBehaviour
     {
-        public enum ConsumableEvents { addHealth, addSatiety, addHydratation }
+        public enum ConsumableEvents { addHealth, addSatiety, addHydratation, passCode }
 
         [Header("What reference should I add?")]
         public ConsumableEvents m_Event;
@@ -23,7 +23,7 @@ namespace DOFprojFPS {
         private PlayerStats playerStats;
         private Item item;
 
-        UnityAction addHealth, addSatiety, addHydratation;
+        UnityAction addHealth, addSatiety, addHydratation, passCode;
 
         private void OnEnable()
         {
@@ -33,6 +33,7 @@ namespace DOFprojFPS {
             addHealth += AddHealth;
             addHydratation += AddHydratation;
             addSatiety += AddSatiety;
+            passCode += ActivatePasscode;
 
             switch (m_Event)
             {
@@ -44,6 +45,9 @@ namespace DOFprojFPS {
                     break;
                 case ConsumableEvents.addSatiety:
                     item.onUseEvent.AddListener(addSatiety);
+                    break;
+                case ConsumableEvents.passCode:
+                    item.onUseEvent.AddListener(passCode);
                     break;
             }
         }
@@ -63,6 +67,10 @@ namespace DOFprojFPS {
             playerStats.AddHydratation(pointsToAdd);
         }
 
+        public void ActivatePasscode()
+        {
+            playerStats.gatePass = true;
+        }
 
     }
 }

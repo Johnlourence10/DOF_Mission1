@@ -6,9 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/John_Scene/TitleScene.unity
-    guid: ed1892611ee217e45bdaec3b7f793683
+    path: Assets/Scenes/Phil_Scene/Bootstrapper.unity
+    guid: 996a9f40bce3f4f4e862736ec4b7efd9
   - enabled: 1
-    path: Assets/Scenes/John_Scene/MainScene.unity
-    guid: 3578e9b8b04939640b76a05293275674
+    path: Assets/Scenes/Phil_Scene/Main Menu.unity
+    guid: f4d87ee851f62844594265cda6c77574
+  - enabled: 1
+    path: Assets/Scenes/Phil_Scene/Master_Scene.unity
+    guid: 8bfabbd29f732ff4cb49aeb9b608b5a3
   m_configObjects: {}

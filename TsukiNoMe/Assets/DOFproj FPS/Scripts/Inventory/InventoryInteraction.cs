@@ -27,6 +27,7 @@ namespace DOFprojFPS
         {
             if (UIItem.item.type == ItemType.consumable)
             {
+                
                 inventory.UseItem(UIItem, false);
             }
             gameObject.SetActive(false);

@@ -265,12 +265,21 @@ namespace DOFprojFPS
             }
             
         }
-        
+        private bool _freezeMovement = false;
+        public bool freezeMovement
+        {
+            get { return _freezeMovement; }
+            set { _freezeMovement = value; }
+        }
+
         void FixedUpdate()
         {
-            CharacterMovement();
-            if (mouseLookEnabled && !InventoryManager.showInventory && lockCursor)
-                MouseLook();
+            if (!_freezeMovement)
+            {
+                CharacterMovement();
+                if (mouseLookEnabled && !InventoryManager.showInventory && lockCursor)
+                    MouseLook();
+            }
         }
         
         void CharacterMovement()

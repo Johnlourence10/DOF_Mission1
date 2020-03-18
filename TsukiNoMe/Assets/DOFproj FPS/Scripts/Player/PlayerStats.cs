@@ -65,7 +65,10 @@ namespace DOFprojFPS
         public Quaternion playerRotation;
 
         private GameObject playerBody;
-        
+
+        private Collider _collider = null;
+        private GameSceneManager _gameSceneManager = null;
+
         #region utility objects
         private Rigidbody playerRigidbody;
         private FPSController controller;
@@ -81,6 +84,9 @@ namespace DOFprojFPS
         
         private void Start()
         {
+            _collider = GetComponent<Collider>();
+            _gameSceneManager = GameSceneManager.instance;
+
             cameraHolder = GameObject.Find("Camera Holder").GetComponent<Transform>();
 
             isPlayerDead = false;
@@ -93,8 +99,18 @@ namespace DOFprojFPS
             
             if(!InputManager.useMobileInput)
             playerBody = FindObjectOfType<Body>().gameObject;
+
+
+            if (_gameSceneManager != null)
+            {
+                PlayerInfo info = new PlayerInfo();
+                info.collider = _collider;
+               _gameSceneManager.RegisterPlayerInfo(_collider.GetInstanceID(), info);
+            }
+
+
         }
-        
+
         void Update()
         {
             if (isPlayerDead)
@@ -128,7 +144,25 @@ namespace DOFprojFPS
             DrawHealthStats();
             DrawPlayerStats();
         }
-        
+        public void DoLevelComplete()
+        {
+            if (controller)
+                controller.freezeMovement = true;
+
+            Invoke("GameOver", 2.0f);
+
+        }
+
+        void GameOver()
+        {
+            // Show the cursor again
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+
+            if (ApplicationManager.instance)
+                ApplicationManager.instance.LoadMainMenu();
+        }
+
         public void ConsumableManager(bool useSystem)
         {
             if (!useSystem)
@@ -199,6 +233,14 @@ namespace DOFprojFPS
         {
             health += hp;
         }
+
+        private bool _gatePassKeyCode = false;
+        public bool gatePass
+        {
+            get { return _gatePassKeyCode; }
+            set { _gatePassKeyCode = value; }
+        }
+
 
         IEnumerator HitFX()
         {

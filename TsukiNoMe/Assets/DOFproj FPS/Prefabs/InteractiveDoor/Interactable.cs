@@ -28,29 +28,30 @@ public class Interactable : MonoBehaviour, IInteractableTarget, IInteractableMes
 
     private void OnTriggerStay(Collider other)
     {
-     
-
-        mIsinPerimeter = true;
+        if (other.gameObject.tag == "Player")
+            mIsinPerimeter = true;
     }
     private void OnTriggerExit(Collider other)
     {
-        mIsinPerimeter = false;
+        if (other.gameObject.tag == "Player")
+            mIsinPerimeter = false;
     }
+
 
     private void Update()
     {
-       // if ((statplayerText != null)&&(mIsinPerimeter)) { statplayerText.text = "Press 'Use' to open/close Door."; }
-        if (CanInteract(this.gameObject) && mIsinPerimeter)
-        {
-            statplayerText.text = "Press 'Use' to open/close Door.";
+       if ((statplayerText != null)&&(mIsinPerimeter)) { statplayerText.text = "Press 'Use' to open/close Door."; }
+        //if (CanInteract(this.gameObject) && mIsinPerimeter)
+        //{
+        //   statplayerText.text = "Press 'Use' to open/close Door.";
             if (Input.GetKeyDown(KeyCode.F) && mIsinPerimeter)
             {
-                //if (CanInteract(this.gameObject))
-                //{
+                if (CanInteract(this.gameObject))
+                {
                     Interact(this.gameObject);
-                //}
+                }
             }
-        }
+        //}
     }
     private void Awake()
         {
