@@ -1081,25 +1081,34 @@ namespace DOFprojFPS
         {
             CancelInvoke();
 
-            reticle.SetActive(true);
-
-            if (animator != null)
+            try
             {
-                if (animator.isActiveAndEnabled)
+
+
+                reticle.SetActive(true);
+
+                if (animator != null)
                 {
-                    animator.Play("Default position");
-                    animator.WriteDefaultValues();
-                    animator.Rebind();
+                    if (animator.isActiveAndEnabled)
+                    {
+                        animator.Play("Default position");
+                        animator.WriteDefaultValues();
+                        animator.Rebind();
+                    }
                 }
+
+                canShot = true;
+                reloading = false;
+
+                if (weaponNameText)
+                    weaponNameText.text = "";
+                if (ammoText)
+                    ammoText.text = "";
             }
+            catch
+            {
 
-            canShot = true;
-            reloading = false;
-
-            if (weaponNameText)
-                weaponNameText.text = "";
-            if (ammoText)
-                ammoText.text = "";
+            }
         }
     }
 }
