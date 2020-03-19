@@ -216,10 +216,14 @@ namespace DOFprojFPS
 
         public void FightHit()
         {
+        
             if (Vector3.Distance(transform.position, player.transform.position) < 4)
             {
-                audioSource.PlayOneShot(attackSounds[Random.Range(0, attackSounds.Length)]);
-                player.gameObject.GetComponent<PlayerStats>().ApplyDamage(Random.Range(1, maxDamage));
+                if (player.gameObject.GetComponent<PlayerStats>() != null)
+                {
+                    audioSource.PlayOneShot(attackSounds[Random.Range(0, attackSounds.Length)]);
+                    player.gameObject.GetComponent<PlayerStats>().ApplyDamage(Random.Range(1, maxDamage));
+                }
             }
         }
 

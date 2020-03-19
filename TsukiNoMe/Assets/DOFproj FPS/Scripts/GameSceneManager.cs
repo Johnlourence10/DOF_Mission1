@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using DOFprojFPS;
+using UnityEngine.UI;
+
 public class PlayerInfo
 {
 	public Collider 			collider 		 = null;
-//	public CharacterManager		characterManager = null;
+//	public Text		characterManager = null;
 	public Camera				camera			 = null;
 	public CapsuleCollider		meleeTrigger	 = null;
 }
@@ -18,9 +20,10 @@ public class GameSceneManager : MonoBehaviour
 {
 	// Inspector Assigned Variables
 	[SerializeField]	private ParticleSystem	_bloodParticles	=	null;
-
-	// Statics
-	private static GameSceneManager	_instance	=	null;
+    [SerializeField]    private PlayerStats _playerStats = null;
+    // public Text playerStats;
+    // Statics
+    private static GameSceneManager	_instance	=	null;
 	public static GameSceneManager	instance
 	{
 		get
@@ -40,42 +43,34 @@ public class GameSceneManager : MonoBehaviour
 	// Properties
 	public ParticleSystem	bloodParticles{ get{ return _bloodParticles;}}
 
-	// Public Methods
-	// --------------------------------------------------------------------
-	// Name	:	RegisterAIStateMachine
-	// Desc	:	Stores the passed state machine in the dictionary with
-	//			the supplied key
-	// --------------------------------------------------------------------
-	//public void RegisterAIStateMachine( int key, AIStateMachine stateMachine )
-	//{
-	//	if (!_stateMachines.ContainsKey(key))
-	//	{
-	//		_stateMachines[key] = stateMachine;
-	//	}
-	//}
+    private void Start()
+    {
+        // Start fading in
+        if (_playerStats) _playerStats.Fade(2.0f, ScreenFadeType.FadeIn);
+    }
 
-	// --------------------------------------------------------------------
-	// Name	:	GetAIStateMachine
-	// Desc	:	Returns an AI State Machine reference searched on by the
-	//			instance ID of an object
-	// --------------------------------------------------------------------
-	//public AIStateMachine GetAIStateMachine( int key )
-	//{
-	//	AIStateMachine machine = null;
-	//	if (_stateMachines.TryGetValue( key, out machine ))
-	//	{
-	//		return machine;
-	//	}
+    // --------------------------------------------------------------------
+    // Name	:	GetAIStateMachine
+    // Desc	:	Returns an AI State Machine reference searched on by the
+    //			instance ID of an object
+    // --------------------------------------------------------------------
+    //public AIStateMachine GetAIStateMachine( int key )
+    //{
+    //	AIStateMachine machine = null;
+    //	if (_stateMachines.TryGetValue( key, out machine ))
+    //	{
+    //		return machine;
+    //	}
 
-	//	return null;
-	//}
+    //	return null;
+    //}
 
-	// --------------------------------------------------------------------
-	// Name	:	RegisterPlayerInfo
-	// Desc	:	Stores the passed PlayerInfo in the dictionary with
-	//			the supplied key
-	// --------------------------------------------------------------------
-	public void RegisterPlayerInfo( int key, PlayerInfo playerInfo )
+    // --------------------------------------------------------------------
+    // Name	:	RegisterPlayerInfo
+    // Desc	:	Stores the passed PlayerInfo in the dictionary with
+    //			the supplied key
+    // --------------------------------------------------------------------
+    public void RegisterPlayerInfo( int key, PlayerInfo playerInfo )
 	{
 		if (!_playerInfos.ContainsKey(key))
 		{

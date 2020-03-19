@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DOFprojFPS;
+
 public enum AnimatorParameterType { Trigger, Bool, Int, Float, String } 
 
 [System.Serializable]
@@ -63,7 +65,9 @@ public class InteractiveGenericSwitch : InteractiveItem
 	protected bool						_activated				=	false;
 	protected bool						_firstUse				=	false;
 
-    public Text statplayerText;
+    [SerializeField] private PlayerStats _playerStats = null;
+
+   // public Text statplayerText;
     // ---------------------------------------------------------------------------
     // Name	: Start
     // Desc	: Register this objects collider with the Activation Database
@@ -101,7 +105,10 @@ public class InteractiveGenericSwitch : InteractiveItem
 			Activate( );
 			_firstUse = false;
 		}
-	}
+
+        _playerStats = FindObjectOfType<PlayerStats>();
+
+    }
 
 
 
@@ -177,7 +184,7 @@ public class InteractiveGenericSwitch : InteractiveItem
 	}
     private void Update()
     {
-        if ((statplayerText != null) && (mIsinPerimeter)) { statplayerText.text = "Press 'Use' to On/Off the Power."; }
+        if ((_playerStats != null) && (mIsinPerimeter)) { _playerStats.ShowMessageText("Press 'Use' to On/Off the Power."); }
 
         if (Input.GetKeyDown(KeyCode.F) && mIsinPerimeter)
         {
@@ -194,7 +201,7 @@ public class InteractiveGenericSwitch : InteractiveItem
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.tag == "Player")
-            mIsinPerimeter = false;
+            mIsinPerimeter = false; _playerStats.ShowMessageText("");
     }
     // -------------------------------------------------------------------------
     // Name	:	Activate
@@ -285,18 +292,18 @@ public class InteractiveGenericSwitch : InteractiveItem
 		{
 			AudioClip clipToPlay = _activationSounds[1];
 
-			// If an audio source has been specified then use it. This is good for playing looping sounds
-			// or sounds that need to happen nowhere near the tigger source
-			//if (_audioSource!=null && clipToPlay && AudioManager.instance)
-			//{
-			//	_audioSource.clip 					= clipToPlay;
-			//	_audioSource.volume 				= _activationSounds.volume;
-			//	_audioSource.spatialBlend 			= _activationSounds.spatialBlend;
+            // If an audio source has been specified then use it. This is good for playing looping sounds
+            // or sounds that need to happen nowhere near the tigger source
+            if (_audioSource != null && clipToPlay && AudioManager.instance)
+            {
+                _audioSource.clip = clipToPlay;
+                _audioSource.volume = _activationSounds.volume;
+                _audioSource.spatialBlend = _activationSounds.spatialBlend;
 
-			//	_audioSource.outputAudioMixerGroup	= AudioManager.instance.GetAudioGroupFromTrackName(_activationSounds.audioGroup);
-			//	_audioSource.Play();
-			//}
-		}
+                _audioSource.outputAudioMixerGroup = AudioManager.instance.GetAudioGroupFromTrackName(_activationSounds.audioGroup);
+                _audioSource.Play();
+            }
+        }
 
 		// If we get here then we are allow to enable this object
 		// so first turn on any game objects that should be made active by this 

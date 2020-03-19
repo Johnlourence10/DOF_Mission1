@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
+
 public class InteractiveKeypad : InteractiveItem
 {
 	[SerializeField] protected Transform 			_elevator 		= null;
@@ -11,7 +13,7 @@ public class InteractiveKeypad : InteractiveItem
 	[SerializeField] protected float				_activationDelay= 0.0f;	
 
 	bool _isActivated	=	false;
-    [SerializeField]public FPSController _mcontroller;
+    [SerializeField] public FPSController _mcontroller;
     [SerializeField] public PlayerStats _mplayerStats;
     [SerializeField] public Text statplayerText;
 
@@ -67,7 +69,7 @@ public class InteractiveKeypad : InteractiveItem
     void OnTriggerExit(Collider other)
     {
         if (_isActivated) return;
-        if (other.CompareTag("Player")) mIsinPerimeter = false;
+        if (other.CompareTag("Player")) mIsinPerimeter = false; _mplayerStats.ShowMessageText("");
     }
 
     private void Awake()
@@ -84,11 +86,13 @@ public class InteractiveKeypad : InteractiveItem
            
             if (_mplayerStats.gatePass == true)
             {
-                statplayerText.text = "Press 'Use' to Scan the ID Pass.";
+                _mplayerStats.ShowMessageText("Press 'Use' to Scan the ID Pass.");
+               // statplayerText.text = "Press 'Use' to Scan the ID Pass.";
             }
             else
             {
-                statplayerText.text = "Press 'Inventory' to use the ID Pass.";
+                _mplayerStats.ShowMessageText("Press 'Inventory' to use the ID Pass.");
+                //  statplayerText.text = "Press 'Inventory' to use the ID Pass.";
             }
          
             if (Input.GetButton("Use"))

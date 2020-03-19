@@ -395,7 +395,8 @@ namespace DOFprojFPS
         {
             if (hit.collider.tag == "MainCamera")
             {
-                playerHealth.ApplyDamage(Random.Range(damage / 2, damage));
+                if (playerHealth.health != 0)
+                     playerHealth.ApplyDamage(Random.Range(damage / 2, damage));
             }
             else
             {

@@ -13,6 +13,8 @@ namespace DOFprojFPS
     /// Death and Respawn methods works in same way but in oposite direction
     /// </summary>
 
+    public enum ScreenFadeType { FadeIn, FadeOut }
+
     public class PlayerStats : MonoBehaviour
     {
         [Header("Health")]
@@ -53,7 +55,11 @@ namespace DOFprojFPS
         [HideInInspector]
         public float satietyTimer;
 
-        public Text playerStats;
+        [SerializeField] private Image _screenFade = null;
+        [SerializeField] private Text _messagesDisplay = null;
+        [SerializeField] private Text _missionText = null;
+        [SerializeField] private float _missionTextDisplayTime = 3.0f;
+ 
 
         private Color damageScreenColor_temp;
 
@@ -80,10 +86,27 @@ namespace DOFprojFPS
         private WeaponManager weaponManager;
         //Don't create any rigidbody here
         private Rigidbody rigidbody_temp;
+
+        // Internals
+        bool _inUse = false;
+        float _currentFadeLevel = 1.0f;
+        IEnumerator _coroutine = null;
         #endregion
-        
+
         private void Start()
         {
+            if (_screenFade)
+            {
+                Color color = _screenFade.color;
+                color.a = _currentFadeLevel;
+                _screenFade.color = color;
+            }
+
+            if (_missionText)
+            {
+                Invoke("HideMissionText", _missionTextDisplayTime);
+            }
+
             _collider = GetComponent<Collider>();
             _gameSceneManager = GameSceneManager.instance;
 
@@ -142,14 +165,21 @@ namespace DOFprojFPS
             WritePlayerTransform();
             ConsumableManager(useConsumeSystem);
             DrawHealthStats();
-            DrawPlayerStats();
+
+            if (_inUse == false)
+                DrawPlayerStats();
         }
         public void DoLevelComplete()
         {
             if (controller)
                 controller.freezeMovement = true;
 
-            Invoke("GameOver", 2.0f);
+              Fade(4.0f, ScreenFadeType.FadeOut);
+              ShowMissionText("Mission Completed");
+               //_playerStats.Invalidate(this);                             //actually this is for Health & Stamina , we dont need this anymore.
+            
+
+              Invoke("GameOver", 4.0f);
 
         }
 
@@ -162,7 +192,86 @@ namespace DOFprojFPS
             if (ApplicationManager.instance)
                 ApplicationManager.instance.LoadMainMenu();
         }
+        public void DoDeath()
+        {
+            if (controller)
+                controller.freezeMovement = true;
 
+            Fade(4.0f, ScreenFadeType.FadeOut);
+             ShowMissionText("Mission Failed");
+               // _playerHUD.Invalidate(this);
+           
+
+          Invoke("GameOver", 4.0f);
+        }
+        public void Fade(float seconds, ScreenFadeType direction)
+        {
+            if (_coroutine != null) StopCoroutine(_coroutine);
+            float targetFade = 0.0f; ;
+
+            switch (direction)
+            {
+                case ScreenFadeType.FadeIn:
+                    targetFade = 0.0f;
+                    break;
+
+                case ScreenFadeType.FadeOut:
+                    targetFade = 1.0f;
+                    break;
+            }
+
+            _coroutine = FadeInternal(seconds, targetFade);
+            StartCoroutine(_coroutine);
+        }
+        IEnumerator FadeInternal(float seconds, float targetFade)
+        {
+            if (!_screenFade) yield break;
+
+            float timer = 0;
+            float srcFade = _currentFadeLevel;
+            Color oldColor = _screenFade.color;
+            if (seconds < 0.1f) seconds = 0.1f;
+
+            while (timer < seconds)
+            {
+                timer += Time.deltaTime;
+                _currentFadeLevel = Mathf.Lerp(srcFade, targetFade, timer / seconds);
+                oldColor.a = _currentFadeLevel;
+                _screenFade.color = oldColor;
+                yield return null;
+            }
+
+            oldColor.a = _currentFadeLevel = targetFade;
+            _screenFade.color = oldColor;
+        }
+        public void ShowMissionText(string text)
+        {
+            if (_missionText)
+            {
+                _missionText.text = text;
+                _missionText.gameObject.SetActive(true);
+            }
+        }
+        public void ShowMessageText(string text)
+        {
+            if (_messagesDisplay)
+            {
+                _messagesDisplay.text = text;
+                if (text.Length > 0)
+                {
+                    _inUse = true;
+                }
+                else { _inUse = false; }
+               // _messagesDisplay.gameObject.SetActive(true);
+            }
+        }
+        public void HideMissionText()
+        {
+            if (_missionText)
+            {
+                _missionText.gameObject.SetActive(false);
+            }
+        }
         public void ConsumableManager(bool useSystem)
         {
             if (!useSystem)
@@ -204,8 +313,8 @@ namespace DOFprojFPS
 
         public void DrawPlayerStats()
         {
-            if(playerStats != null)
-                playerStats.text = string.Format("--- Player statistic ---\n\n\n - Health: {0}\n\n - Hydratation: {1}\n\n - Satiety: {2}\n\n", health, hydratation, satiety);
+            if(_messagesDisplay != null)
+                _messagesDisplay.text = string.Format("--- Player statistic ---\n\n\n - Health: {0}\n\n - Hydratation: {1}\n\n - Satiety: {2}\n\n", health, hydratation, satiety);
         }
 
         public void ApplyDamage(int damage)
@@ -257,6 +366,8 @@ namespace DOFprojFPS
         {
             if (!isPlayerDead)
             {
+                DoDeath();
+
                 var cameraTarget = GameObject.FindGameObjectWithTag("MainCamera").tag = "Untagged";
 
                 sway.enabled = false;
@@ -295,7 +406,9 @@ namespace DOFprojFPS
 
                 isPlayerDead = true;
 
-                Destroy(this);
+              //  if (_coroutine != null) StopCoroutine(_coroutine);
+
+               // Destroy(this);
             }
             else
                 return;

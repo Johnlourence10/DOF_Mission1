@@ -273,7 +273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ID: 1
-  statplayerText: {fileID: 0}
+  _playerStats: {fileID: 0}
   m_Targets:
   - {fileID: 6003521608074400506}
 --- !u!1 &6003521608074499143
@@ -700,7 +700,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6003521608074499163}
-  m_LocalRotation: {x: 0.7071069, y: 0.7071067, z: -0.00000006767665, w: -0.00000012063727}
+  m_LocalRotation: {x: -0.70710695, y: -0.70710665, z: 0.00000019861231, w: 0.0000001986124}
   m_LocalPosition: {x: -0.8959948, y: 0.17006132, z: 0.11110014}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -762,7 +762,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6003521608074499167}
-  m_LocalRotation: {x: 0.50000006, y: 0.49999988, z: 0.50000006, w: 0.5}
+  m_LocalRotation: {x: 0.5000001, y: 0.49999976, z: 0.5000001, w: 0.5000001}
   m_LocalPosition: {x: -1.1111, y: 0.5, z: 0.030549884}
   m_LocalScale: {x: 1.0000001, y: 1, z: 1.0000001}
   m_Children:
@@ -938,6 +938,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ID: 1
-  statplayerText: {fileID: 0}
+  _playerStats: {fileID: 0}
   m_Targets:
   - {fileID: 6003521608074400506}

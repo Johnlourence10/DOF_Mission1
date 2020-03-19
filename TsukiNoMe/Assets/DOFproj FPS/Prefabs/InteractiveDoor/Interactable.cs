@@ -3,11 +3,12 @@
 
 using UnityEngine;
 using UnityEngine.UI;
+using DOFprojFPS;
 public class Interactable : MonoBehaviour, IInteractableTarget, IInteractableMessage
 {
         [Tooltip("The ID of the Interactable, used by the Interact ability for filtering. A value of -1 indicates no ID.")]
         [SerializeField] protected int m_ID = -1;
-        public Text statplayerText;
+        [SerializeField] private PlayerStats _playerStats = null;
         [Tooltip("The object(s) that the interaction is performend on. This component must implement the IInteractableTarget.")]
         [SerializeField] protected MonoBehaviour[] m_Targets;
 
@@ -34,13 +35,13 @@ public class Interactable : MonoBehaviour, IInteractableTarget, IInteractableMes
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.tag == "Player")
-            mIsinPerimeter = false;
+            mIsinPerimeter = false; _playerStats.ShowMessageText("");
     }
 
 
     private void Update()
     {
-       if ((statplayerText != null)&&(mIsinPerimeter)) { statplayerText.text = "Press 'Use' to open/close Door."; }
+       if ((_playerStats != null)&&(mIsinPerimeter)) { _playerStats.ShowMessageText("Press 'Use' to open/close Door."); }
         //if (CanInteract(this.gameObject) && mIsinPerimeter)
         //{
         //   statplayerText.text = "Press 'Use' to open/close Door.";
@@ -70,9 +71,9 @@ public class Interactable : MonoBehaviour, IInteractableTarget, IInteractableMes
             }
 
 
-
-            //m_IKTargets = GetComponentsInChildren<AbilityIKTarget>();
-        }
+        _playerStats = FindObjectOfType<PlayerStats>();
+        //m_IKTargets = GetComponentsInChildren<AbilityIKTarget>();
+    }
 
         /// <summary>
         /// Determines if the character can interact with the InteractableTarget.
